@@ -26,14 +26,16 @@ const rootReducer = {
 export default (appReducers) => {
   // Persistance configuration
   const persistConfig = {
-    key: 'root',
-    blacklist: ['fullNode', 'lightNode'],
+    key: 'elementDID',
+    whitelist: ['wallet'],
     storage,
   };
 
   // Store.
+
+  const reducers = combineReducers({ ...rootReducer, ...appReducers });
   const store = createStore(
-    persistReducer(persistConfig, combineReducers({ ...rootReducer, ...appReducers })),
+    persistReducer(persistConfig, reducers),
     composeWithDevTools(applyMiddleware(thunk, routerMiddleware(history))),
   );
 

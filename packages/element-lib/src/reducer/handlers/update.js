@@ -1,8 +1,10 @@
 const _ = require('lodash');
-const { applyReducer } = require('fast-json-patch');
+const jsonpatch = require('fast-json-patch');
+
 const verifyOperationSignature = require('../../func/verifyOperationSignature');
 const payloadToHash = require('../../func/payloadToHash');
 
+const { applyReducer } = jsonpatch;
 module.exports = async (state, anchoredOperation) => {
   // console.log("update", anchoredOperation);
   if (state.deleted) {
@@ -11,13 +13,12 @@ module.exports = async (state, anchoredOperation) => {
   }
 
   const {
-    did,
+    didUniqueSuffix,
     previousOperationHash,
     patch,
-    operationNumber,
   } = anchoredOperation.decodedOperationPayload;
 
-  const uid = did.split(':')[2];
+  const uid = didUniqueSuffix;
 
   if (!state[uid]) {
     throw new Error('Cannot update a DID that does not exist.');
@@ -33,10 +34,6 @@ module.exports = async (state, anchoredOperation) => {
     throw new Error('previousOperationHash is not correct, update invalid');
   }
 
-  if (state[uid].operationNumber !== operationNumber - 1) {
-    throw new Error('operationNumber is not correct, update invalid');
-  }
-
   if (!signingKey) {
     throw new Error('Cannot find kid in doc, update invalid.');
   }
@@ -50,6 +47,13 @@ module.exports = async (state, anchoredOperation) => {
     throw new Error('Signature is not valid.');
   }
 
+  patch.forEach((p) => {
+    const patchPointedData = jsonpatch.getValueByPointer(preUpdateDidDoc, p.path);
+    if (patchPointedData && patchPointedData.id && patchPointedData.id === '#recovery') {
+      throw new Error('Cannot change #recovery with update.');
+    }
+  });
+
   const updatedDoc = patch.reduce(applyReducer, preUpdateDidDoc);
 
   const newPreviousOperationHash = payloadToHash(anchoredOperation.decodedOperationPayload);
@@ -60,7 +64,6 @@ module.exports = async (state, anchoredOperation) => {
       ...state[uid],
       doc: updatedDoc,
       previousOperationHash: newPreviousOperationHash,
-      operationNumber,
       txns: [...state[uid].txns, anchoredOperation.transaction],
     },
   };
