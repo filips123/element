@@ -57,6 +57,8 @@
     "eslint-plugin-jest": "^22.1.2",
     "eslint-plugin-node": "^8.0.0",
     "eslint-plugin-security": "^1.4.0",
-    "jest": "^24.5.0"
+    "ganache-cli": "^6.1.0",
+    "jest": "^24.5.0",
+    "truffle": "^5.0.8"
   }
 }
