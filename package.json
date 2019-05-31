@@ -8,6 +8,8 @@
     "test": "lerna run test --stream",
     "coverage": "lerna run coverage --ignore @transmute/element-api --stream",
     "ganache": "lerna run ganache --stream",
+    "ipfs:init": "ipfs init",
+    "ipfs": "ipfs daemon",
     "test:contracts": "lerna run test:contracts",
     "create-local-runtimeconfig": "lerna run create-local-runtimeconfig",
     "contracts:migrate:dev": "lerna run contracts:migrate:dev",
