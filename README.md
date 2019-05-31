@@ -24,6 +24,9 @@ npm run bootstrap
 npm run ganache # In a separate shell
 npm run test:contracts
 
+# Migrating the contracts
+npm run create-local-runtimeconfig
 npm run contracts:migrate:dev
+
 npm run test
 ```
