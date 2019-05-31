@@ -28,5 +28,8 @@ npm run test:contracts
 npm run create-local-runtimeconfig
 npm run contracts:migrate:dev
 
+# Run all other tests
+npm run ipfs:init # Only need to run that once
+npm run ipfs # In a separate shell
 npm run test
 ```
