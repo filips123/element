@@ -19,7 +19,11 @@ See [.travis.yml](./.travis.yml) for setup and test commands.
 ```
 npm i
 npm run bootstrap
+
+# Running the smart contract tests
+npm run ganache # In a separate shell
 npm run test:contracts
+
 npm run contracts:migrate:dev
 npm run test
 ```
